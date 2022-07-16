@@ -14,10 +14,10 @@ export class Category extends PureComponent {
 
   fetchCategoryDetails = async (currentCategoryName) => {
     try {
-      const categoryDetails = await queryFetch(CATEGORIES_PRODUCTS_QUERY, { categoryName: currentCategoryName });
+      const categoryDetailsRequest = await queryFetch(CATEGORIES_PRODUCTS_QUERY, { categoryName: currentCategoryName });
       const {
         data: { category },
-      } = categoryDetails;
+      } = categoryDetailsRequest;
 
       this.setState({
         isLoading: false,
