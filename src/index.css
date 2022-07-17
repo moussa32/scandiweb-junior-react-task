@@ -212,6 +212,132 @@ button {
   display: block !important;
 }
 
+/*Product page*/
+.product-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-top: 2.5rem;
+}
+
+.product-gallery-images {
+  display: flex;
+  flex-direction: column;
+  flex: 0.1;
+  gap: 30px;
+}
+
+.product-gallery-image {
+  display: block;
+  width: 75px;
+  cursor: pointer;
+}
+
+.product-slider {
+  flex: 0.45;
+}
+
+.product-slider-image {
+  display: block;
+  width: 100%;
+}
+
+.product-info {
+  flex: 0.5;
+  padding-left: 40px;
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 25px;
+  margin-bottom: 0.5rem;
+}
+
+.product-cateogry {
+  font-weight: 400;
+  font-size: 25px;
+  color: var(--c-text);
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+}
+
+.product-section {
+  margin: 2rem 0;
+}
+
+.product-sub-title {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.product-attributes {
+  display: flex;
+  flex-flow: row;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.option-button:disabled {
+  border: 1px solid #a6a6a6;
+  color: #a6a6a6;
+}
+
+.option-button {
+  background-color: #fff;
+  border: 1px var(--c-text) solid;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.option-button.primary-active {
+  box-shadow: 0px 0px 0px 3px var(--c-primary);
+  color: #fff;
+  transition: 0.5s ease;
+}
+
+.option-button.secondary-active {
+  background-color: var(--c-text) !important;
+  color: #fff;
+  transition: 0.5s ease;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.main-button {
+  width: 100%;
+  background-color: var(--c-primary);
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  height: 52px;
+  cursor: pointer;
+}
+
+.main-button:disabled {
+  opacity: 0.8;
+  cursor: no-drop;
+}
+
+.product-description {
+  margin-top: 1.5rem;
+}
+
+.product-description h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 1rem 0;
+}
+
 @media screen and (max-width: 360px) {
   .navbar {
     flex-direction: column;

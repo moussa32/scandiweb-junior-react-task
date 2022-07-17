@@ -41,3 +41,31 @@ export const CATEGORIES_PRODUCTS_QUERY = `query getCategoryProducts($categoryNam
       }
     }
   }`;
+
+export const PRODUCT_DETAILS_QUERY = `query getProduct($productID: String!){
+    product(id: $productID){
+        id
+        name
+        inStock
+        gallery
+        description
+        category
+        attributes{
+          id
+          name
+          type
+          items{
+            id
+            displayValue
+            value
+          }
+        }
+        prices{
+          currency{
+              label
+              symbol
+            }
+          amount
+        }
+      }
+  }`;
