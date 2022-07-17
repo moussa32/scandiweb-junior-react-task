@@ -57,7 +57,6 @@ export class Category extends PureComponent {
   }
 
   render() {
-    console.log(this.state.categoryDetails.products);
     const { isLoading, categoryDetails } = this.state;
     return (
       <>
