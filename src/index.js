@@ -5,6 +5,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./Graphql/client";
 import "./index.css";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const App = lazy(() => import("./App"));
 
@@ -12,9 +14,11 @@ ReactDOM.render(
   <>
     <Suspense fallback={<div className="loader">Loading...</div>}>
       <ApolloProvider client={client}>
-        <Router>
-          <App />
-        </Router>
+        <Provider store={store}>
+          <Router>
+            <App />
+          </Router>
+        </Provider>
       </ApolloProvider>
     </Suspense>
   </>,

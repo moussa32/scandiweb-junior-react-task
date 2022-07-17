@@ -84,9 +84,9 @@ button {
   gap: 10px;
 }
 
-.currencySwitcherIcon {
-  width: 12px;
-  height: 29px;
+.default-currency-symbol {
+  font-size: 19px;
+  font-weight: 500;
 }
 
 .currencySwitcherArrow {
@@ -115,6 +115,42 @@ button {
   font-weight: 700;
 }
 
+.currencies-list {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  top: 60px;
+  z-index: 1000;
+  box-shadow: 0 5px 11px 1px #ddd;
+  right: 315px;
+}
+
+.currency-option {
+  background: #fff;
+  cursor: pointer;
+  padding: 0.7rem 1.4rem;
+  width: 100%;
+}
+
+.currency-option:hover {
+  background-color: #ddd;
+}
+
+.currency-option-symbol {
+  font-size: 15px;
+  margin-right: 5px;
+  font-weight: 500;
+}
+
+.currency-option-label {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/*End of Navbar*/
+
+/*Product page*/
 .category-container {
   padding: 10px 40px;
 }

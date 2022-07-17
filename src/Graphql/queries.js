@@ -42,6 +42,13 @@ export const CATEGORIES_PRODUCTS_QUERY = `query getCategoryProducts($categoryNam
     }
   }`;
 
+export const CURRENCIES_QUERY = `query {
+  currencies{
+    label
+    symbol
+  }
+  }`;
+
 export const PRODUCT_DETAILS_QUERY = `query getProduct($productID: String!){
     product(id: $productID){
         id
