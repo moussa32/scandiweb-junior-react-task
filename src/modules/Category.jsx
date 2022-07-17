@@ -2,6 +2,8 @@ import React, { PureComponent } from "react";
 import { CATEGORIES_PRODUCTS_QUERY } from "../Graphql/queries";
 import { queryFetch } from "../Graphql/queryFetch";
 import ProductCard from "./ProductCard";
+import { connect } from "react-redux";
+import { currencyConverter } from "../shared/utiltes/currencyConverter";
 
 export class Category extends PureComponent {
   constructor(props) {
@@ -58,6 +60,8 @@ export class Category extends PureComponent {
 
   render() {
     const { isLoading, categoryDetails } = this.state;
+    const { defaultCurrency } = this.props;
+
     return (
       <>
         {isLoading ? (
@@ -73,7 +77,7 @@ export class Category extends PureComponent {
                   name={product.name}
                   inStock={product.inStock}
                   thumbnail={product.gallery[0]}
-                  price={product.prices[0]}
+                  price={currencyConverter(product.prices, defaultCurrency.label)}
                 />
               ))}
             </div>
@@ -84,4 +88,10 @@ export class Category extends PureComponent {
   }
 }
 
-export default Category;
+const mapStateToProps = ({ currency }) => {
+  return {
+    defaultCurrency: currency,
+  };
+};
+
+export default connect(mapStateToProps)(Category);

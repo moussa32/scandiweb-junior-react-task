@@ -2,8 +2,10 @@ import React, { PureComponent } from "react";
 import { PRODUCT_DETAILS_QUERY } from "../Graphql/queries";
 import { queryFetch } from "../Graphql/queryFetch";
 import parse from "html-react-parser";
+import { connect } from "react-redux";
+import { currencyConverter } from "../shared/utiltes/currencyConverter";
 
-export default class ProductDetails extends PureComponent {
+class ProductDetails extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -71,6 +73,7 @@ export default class ProductDetails extends PureComponent {
   render() {
     console.log(this.state.productDetail);
     const { isLoading, productDetail, activeImage } = this.state;
+    const { defaultCurrency } = this.props;
 
     return (
       <main className="product-container">
@@ -121,8 +124,8 @@ export default class ProductDetails extends PureComponent {
               </div>
               <section className="product-price">
                 <h2 className="product-sub-title">PRICE</h2>
-                <span>{productDetail.prices[0].currency.symbol}</span>
-                <span>{productDetail.prices[0].amount}</span>
+                <span>{currencyConverter(productDetail.prices, defaultCurrency.label).currency.symbol}</span>
+                <span>{currencyConverter(productDetail.prices, defaultCurrency.label).amount}</span>
               </section>
               <button className="main-button" disabled={!productDetail.inStock}>
                 {!productDetail.inStock ? "out of stock" : "add to cart"}
@@ -135,3 +138,11 @@ export default class ProductDetails extends PureComponent {
     );
   }
 }
+
+const mapStateToProps = ({ currency }) => {
+  return {
+    defaultCurrency: currency,
+  };
+};
+
+export default connect(mapStateToProps)(ProductDetails);
