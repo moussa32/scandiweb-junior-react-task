@@ -4,6 +4,7 @@ import { queryFetch } from "../Graphql/queryFetch";
 import parse from "html-react-parser";
 import { connect } from "react-redux";
 import { currencyConverter } from "../shared/utiltes/currencyConverter";
+import { addItem } from "../redux/actions";
 
 class ProductDetails extends PureComponent {
   constructor(props) {
@@ -37,7 +38,6 @@ class ProductDetails extends PureComponent {
   /*This function responsible for get all siblings of clicked element and remove active class from them then set active class on clicked element */
   toggleClass = (element, optionType) => {
     const siblingsOfClickedElement = [...element.target.parentElement.children];
-    console.log(optionType);
     if (optionType === "swatch") {
       siblingsOfClickedElement.forEach((sib) => sib.classList.remove("primary-active"));
       element.target.classList.add("primary-active");
@@ -70,8 +70,22 @@ class ProductDetails extends PureComponent {
     });
   };
 
+  handleAddProduct = (product) => {
+    const { dispatch } = this.props;
+    console.log(product);
+
+    if (product.attributes.length !== 0) {
+      if (product.hasOwnProperty("selectedOptions") && product.attributes.length === product.selectedOptions.length) {
+        dispatch(addItem({ ...product }));
+      } else {
+        alert("You can't add product without select options");
+      }
+    } else {
+      dispatch(addItem({ ...product }));
+    }
+  };
+
   render() {
-    console.log(this.state.productDetail);
     const { isLoading, productDetail, activeImage } = this.state;
     const { defaultCurrency } = this.props;
 
@@ -110,10 +124,10 @@ class ProductDetails extends PureComponent {
                               id={item.id}
                               onClick={(e) => this.handleSelection(e, attribute.name, attribute.type, item)}
                               style={{
-                                backgroundColor: attribute.type === "swatch" ? item.displayValue : "",
+                                backgroundColor: attribute.type === "swatch" ? item.value : "",
                               }}
                             >
-                              {attribute.type === "text" ? item.displayValue : ""}
+                              {attribute.type === "text" ? item.value : ""}
                             </button>
                           ))}
                         </div>
@@ -127,7 +141,11 @@ class ProductDetails extends PureComponent {
                 <span>{currencyConverter(productDetail.prices, defaultCurrency.label).currency.symbol}</span>
                 <span>{currencyConverter(productDetail.prices, defaultCurrency.label).amount}</span>
               </section>
-              <button className="main-button" disabled={!productDetail.inStock}>
+              <button
+                className="main-button"
+                disabled={!productDetail.inStock}
+                onClick={() => this.handleAddProduct(productDetail)}
+              >
                 {!productDetail.inStock ? "out of stock" : "add to cart"}
               </button>
               <section className="product-description">{parse(productDetail.description)}</section>

@@ -1,5 +1,6 @@
 import { lazy, PureComponent } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Cart from "./modules/Cart";
 import Category from "./modules/Category";
 import Navbar from "./modules/Navbar/Navbar";
 
@@ -13,6 +14,8 @@ class App extends PureComponent {
         <Switch>
           <Route exact path="/category/:categoryName" component={Category}></Route>
           <Route exact path="/product/:productID" component={ProductDetails}></Route>
+          <Route exact path="/cart" component={Cart}></Route>
+          <Redirect to="/category/all" />
         </Switch>
       </>
     );

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { BrandIcon } from "../../assets";
 import { CATEGORIES_TITLE_QUERY } from "../../Graphql/queries";
 import { queryFetch } from "../../Graphql/queryFetch";
@@ -37,9 +37,9 @@ export default class Navbar extends Component {
             {categories.length !== 0 &&
               categories.map((category) => (
                 <li className="nav-item" key={category.name}>
-                  <Link to={`/category/${category.name}`} className="nav-link">
+                  <NavLink to={`/category/${category.name}`} className="nav-link" activeClassName="active-link">
                     {category.name}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
           </ul>

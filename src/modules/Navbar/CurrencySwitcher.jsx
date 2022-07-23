@@ -85,7 +85,7 @@ class CurrencySwitcher extends Component {
     const { defaultCurrency } = this.props;
 
     return (
-      <div ref={this.wrapperRef}>
+      <div className="currency-switcher-container" ref={this.wrapperRef}>
         <button className="navbar-button currency-switcher-button" onClick={this.handelModal}>
           <span className="default-currency-symbol">{defaultCurrency.symbol}</span>
           <img
