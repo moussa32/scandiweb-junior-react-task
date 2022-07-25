@@ -139,7 +139,6 @@ class Minicart extends PureComponent {
 }
 
 const mapStateToProps = ({ currency, minicart }) => {
-  console.log(minicart);
   return {
     defaultCurrency: currency,
     minicart,
