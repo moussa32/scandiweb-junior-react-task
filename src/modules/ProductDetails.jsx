@@ -72,7 +72,6 @@ class ProductDetails extends PureComponent {
 
   handleAddProduct = (product) => {
     const { dispatch } = this.props;
-    console.log(product);
 
     if (product.attributes.length !== 0) {
       if (product.hasOwnProperty("selectedOptions") && product.attributes.length === product.selectedOptions.length) {
