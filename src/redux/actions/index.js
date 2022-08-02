@@ -15,3 +15,10 @@ export const addItem = (product) => {
     payload: product,
   };
 };
+
+export const addProducts = (products) => {
+  return {
+    type: "ADD_PRODUCTS",
+    payload: products,
+  };
+};

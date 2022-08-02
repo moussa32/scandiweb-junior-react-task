@@ -3,30 +3,33 @@ import { connect } from "react-redux";
 
 import { CATEGORIES_PRODUCTS_QUERY, CATEGORY_ATTRIBUTES_QUERY } from "../Graphql/queries";
 import { queryFetch } from "../Graphql/queryFetch";
+import { addProducts } from "../redux/actions";
 import { currencyConverter } from "../shared/utiltes/currencyConverter";
 import Filters from "./Filters";
 import ProductCard from "./ProductCard";
 
-export class Category extends PureComponent {
+class Category extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
       filters: [],
-      categoryDetails: { name: "", products: [] },
+      categoryName: "",
     };
   }
 
   fetchCategoryDetails = async (currentCategoryName) => {
+    const { dispatch } = this.props;
     try {
       const categoryDetailsRequest = await queryFetch(CATEGORIES_PRODUCTS_QUERY, { categoryName: currentCategoryName });
       const {
         data: { category },
       } = categoryDetailsRequest;
 
+      dispatch(addProducts(category.products));
       this.setState({
         isLoading: false,
-        categoryDetails: category,
+        categoryName: category.name,
       });
     } catch (error) {
       alert(error);
@@ -85,8 +88,8 @@ export class Category extends PureComponent {
   }
 
   render() {
-    const { isLoading, categoryDetails, filters } = this.state;
-    const { defaultCurrency } = this.props;
+    const { isLoading, categoryName, filters } = this.state;
+    const { defaultCurrency, products } = this.props;
 
     return (
       <>
@@ -94,10 +97,10 @@ export class Category extends PureComponent {
           <div>Loading...</div>
         ) : (
           <main className="category-container">
-            <h1 className="category-title">{categoryDetails.name}</h1>
-            <Filters filters={filters} products={categoryDetails.products} />
+            <h1 className="category-title">{categoryName}</h1>
+            <Filters filters={filters} products={products} />
             <div className="products-container">
-              {categoryDetails.products.map((product) => (
+              {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   id={product.id}
@@ -115,9 +118,10 @@ export class Category extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ currency }) => {
+const mapStateToProps = ({ currency, products }) => {
   return {
     defaultCurrency: currency,
+    products,
   };
 };
 
