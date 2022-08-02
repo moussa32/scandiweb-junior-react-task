@@ -38,9 +38,38 @@ export const CATEGORIES_PRODUCTS_QUERY = `query getCategoryProducts($categoryNam
             }
           amount
         }
+        attributes{
+          id
+          name
+          type
+          items{
+            id
+            displayValue
+            value
+          }
+        }
       }
     }
   }`;
+
+export const CATEGORY_ATTRIBUTES_QUERY = `query getCategoryAttributes($categoryName: String!){
+  category(input:{title: $categoryName}){
+    name
+    products{
+       id
+       attributes{
+        id
+        name
+        type
+        items{
+          id
+          displayValue
+          value
+        }
+      }
+    }
+  }
+}`;
 
 export const CURRENCIES_QUERY = `query {
   currencies{
