@@ -1,15 +1,18 @@
 import React, { PureComponent } from "react";
-import { CATEGORIES_PRODUCTS_QUERY } from "../Graphql/queries";
-import { queryFetch } from "../Graphql/queryFetch";
-import ProductCard from "./ProductCard";
 import { connect } from "react-redux";
+
+import { CATEGORIES_PRODUCTS_QUERY, CATEGORY_ATTRIBUTES_QUERY } from "../Graphql/queries";
+import { queryFetch } from "../Graphql/queryFetch";
 import { currencyConverter } from "../shared/utiltes/currencyConverter";
+import Filters from "./Filters";
+import ProductCard from "./ProductCard";
 
 export class Category extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
+      filters: [],
       categoryDetails: { name: "", products: [] },
     };
   }
@@ -30,6 +33,27 @@ export class Category extends PureComponent {
     }
   };
 
+  fetchCategoryAttributes = async (currentCategoryName) => {
+    try {
+      const categoryAttributesRequest = await queryFetch(CATEGORY_ATTRIBUTES_QUERY, {
+        categoryName: currentCategoryName,
+      });
+      const {
+        data: { category },
+      } = categoryAttributesRequest;
+
+      const categoryAttributes = category.products.map((item) => item.attributes.filter((attr) => attr.name)).flat();
+      const categoryFilters = [...new Set(categoryAttributes)];
+
+      this.setState({
+        ...this.state,
+        filters: categoryFilters,
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   async componentDidMount() {
     const {
       match: {
@@ -37,6 +61,7 @@ export class Category extends PureComponent {
       },
     } = this.props;
     this.fetchCategoryDetails(categoryName);
+    this.fetchCategoryAttributes(categoryName);
   }
 
   componentDidUpdate(prevProps) {
@@ -55,11 +80,12 @@ export class Category extends PureComponent {
     //Check if category has been changed let's fetch the new category data
     if (newCategoryName !== prevCategoryName) {
       this.fetchCategoryDetails(newCategoryName);
+      this.fetchCategoryAttributes(newCategoryName);
     }
   }
 
   render() {
-    const { isLoading, categoryDetails } = this.state;
+    const { isLoading, categoryDetails, filters } = this.state;
     const { defaultCurrency } = this.props;
 
     return (
@@ -69,6 +95,7 @@ export class Category extends PureComponent {
         ) : (
           <main className="category-container">
             <h1 className="category-title">{categoryDetails.name}</h1>
+            <Filters filters={filters} products={categoryDetails.products} />
             <div className="products-container">
               {categoryDetails.products.map((product) => (
                 <ProductCard
