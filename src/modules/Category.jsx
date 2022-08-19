@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { CATEGORIES_PRODUCTS_QUERY, CATEGORY_ATTRIBUTES_QUERY } from "../Graphql/queries";
 import { queryFetch } from "../Graphql/queryFetch";
-import { addProducts } from "../redux/actions";
+import { addFilterProducts, addProducts } from "../redux/actions";
 import { currencyConverter } from "../shared/utiltes/currencyConverter";
 import Filters from "./Filters";
 import ProductCard from "./ProductCard";
@@ -27,6 +27,7 @@ class Category extends PureComponent {
       } = categoryDetailsRequest;
 
       dispatch(addProducts(category.products));
+      dispatch(addFilterProducts(category.products));
       this.setState({
         isLoading: false,
         categoryName: category.name,
@@ -93,7 +94,7 @@ class Category extends PureComponent {
 
   render() {
     const { isLoading, categoryName, filters } = this.state;
-    const { defaultCurrency, products } = this.props;
+    const { defaultCurrency, filter_Parameters } = this.props;
 
     return (
       <>
@@ -104,9 +105,9 @@ class Category extends PureComponent {
             <h1 className="category-title">{categoryName}</h1>
             <Filters filters={filters} />
             <div className="products-container">
-              {products.length !== 0 && (
+              {filter_Parameters.products.length !== 0 && (
                 <>
-                  {products.map((product) => (
+                  {filter_Parameters.products.map((product) => (
                     <ProductCard
                       key={product.id}
                       id={product.id}
@@ -118,7 +119,7 @@ class Category extends PureComponent {
                   ))}
                 </>
               )}
-              {products.length === 0 && <p>No products match your filters</p>}
+              {filter_Parameters.products.length === 0 && <p>No products match your filters</p>}
             </div>
           </main>
         )}
@@ -127,10 +128,11 @@ class Category extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ currency, products }) => {
+const mapStateToProps = ({ currency, products, filter_Parameters }) => {
   return {
     defaultCurrency: currency,
     products,
+    filter_Parameters,
   };
 };
 

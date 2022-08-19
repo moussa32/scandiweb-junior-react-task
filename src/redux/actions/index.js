@@ -30,6 +30,20 @@ export const addFilterParameters = (parameters) => {
   };
 };
 
+export const deleteFilterParameter = (parameter) => {
+  return {
+    type: "DELETE_FILTER_PARAMETER",
+    payload: parameter,
+  };
+};
+
+export const addFilterProducts = (products) => {
+  return {
+    type: "ADD_FILTERED_PRODUCTS",
+    payload: products,
+  };
+};
+
 export const resetFilterParameters = () => {
   return {
     type: "RESET_FILTER_PARAMETERS",

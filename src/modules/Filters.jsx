@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { addFilterParameters, addProducts, resetFilterParameters } from "../redux/actions";
+import { addFilterParameters, addFilterProducts, deleteFilterParameter, resetFilterParameters } from "../redux/actions";
 
 import SelectInput from "../shared/components/SelectInput";
 
@@ -64,12 +64,28 @@ class Filters extends PureComponent {
 
   handleChange = (event) => {
     const { dispatch, filter_Parameters } = this.props;
-    dispatch(
-      addFilterParameters({
-        ...filter_Parameters,
-        [event.target.name.toLowerCase()]: event.target.value,
-      })
-    );
+    const parameterName = event.target.name.toLowerCase();
+
+    if (event.target.value !== filter_Parameters.params[parameterName]) {
+      dispatch(
+        addFilterParameters({
+          ...filter_Parameters.params,
+          [parameterName]: event.target.value,
+        })
+      );
+    } else {
+      console.log(event.target.type);
+
+      dispatch(deleteFilterParameter(parameterName));
+    }
+  };
+
+  resetFilters = () => {
+    const { dispatch, location, products } = this.props;
+
+    dispatch(resetFilterParameters());
+    dispatch(addFilterProducts(products));
+    window.history.replaceState({}, "", `${location.pathname}`);
   };
 
   componentDidMount() {
@@ -87,17 +103,19 @@ class Filters extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { filter_Parameters, location, dispatch } = this.props;
-
-    if (JSON.stringify(filter_Parameters) !== {}) {
-      console.log(filter_Parameters);
-      const URLParams = new URLSearchParams(filter_Parameters);
+    if (filter_Parameters.params && Object.keys(filter_Parameters.params).length !== 0) {
+      const URLParams = new URLSearchParams(filter_Parameters.params);
       window.history.replaceState({}, "", `${location.pathname}?${URLParams}`);
     }
 
-    if (JSON.stringify(prevProps.filter_Parameters) !== JSON.stringify(this.props.filter_Parameters)) {
-      const filterParamsKeys = Object.keys(filter_Parameters);
+    if (
+      JSON.stringify(prevProps.filter_Parameters.params) !== JSON.stringify(this.props.filter_Parameters.params) &&
+      filter_Parameters.params &&
+      Object.keys(filter_Parameters.params).length !== 0
+    ) {
+      const filterParamsKeys = Object.keys(filter_Parameters.params);
       const filteredProducts = this.handleFilter(filterParamsKeys);
-      dispatch(addProducts(filteredProducts));
+      dispatch(addFilterProducts(filteredProducts));
     }
 
     if (prevProps.location.pathname !== this.props.location.pathname) {
@@ -149,6 +167,9 @@ class Filters extends PureComponent {
             </div>
           </section>
         ))}
+        <button className="main-button" onClick={this.resetFilters}>
+          Reset filters
+        </button>
       </aside>
     );
   }
