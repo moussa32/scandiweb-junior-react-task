@@ -22,3 +22,16 @@ export const addProducts = (products) => {
     payload: products,
   };
 };
+
+export const addFilterParameters = (parameters) => {
+  return {
+    type: "ADD_FILTER_PARAMETERS",
+    payload: parameters,
+  };
+};
+
+export const resetFilterParameters = () => {
+  return {
+    type: "RESET_FILTER_PARAMETERS",
+  };
+};

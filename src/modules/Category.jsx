@@ -84,6 +84,10 @@ class Category extends PureComponent {
     if (newCategoryName !== prevCategoryName) {
       this.fetchCategoryDetails(newCategoryName);
       this.fetchCategoryAttributes(newCategoryName);
+      this.setState({
+        ...this.state,
+        filters: [],
+      });
     }
   }
 
@@ -98,18 +102,23 @@ class Category extends PureComponent {
         ) : (
           <main className="category-container">
             <h1 className="category-title">{categoryName}</h1>
-            <Filters filters={filters} products={products} />
+            <Filters filters={filters} />
             <div className="products-container">
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  inStock={product.inStock}
-                  thumbnail={product.gallery[0]}
-                  price={currencyConverter(product.prices, defaultCurrency.label)}
-                />
-              ))}
+              {products.length !== 0 && (
+                <>
+                  {products.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      id={product.id}
+                      name={product.name}
+                      inStock={product.inStock}
+                      thumbnail={product.gallery[0]}
+                      price={currencyConverter(product.prices, defaultCurrency.label)}
+                    />
+                  ))}
+                </>
+              )}
+              {products.length === 0 && <p>No products match your filters</p>}
             </div>
           </main>
         )}

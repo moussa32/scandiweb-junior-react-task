@@ -1,13 +1,16 @@
 import React, { PureComponent } from "react";
+import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { addFilterParameters, addProducts, resetFilterParameters } from "../redux/actions";
 
 import SelectInput from "../shared/components/SelectInput";
 
-export class Filters extends PureComponent {
+class Filters extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
   renderFilterInput = (attributeItems) => {
     let attributeType;
 
@@ -55,33 +58,57 @@ export class Filters extends PureComponent {
           }
         }
       }
-
-      console.log(filteredProducts);
-      return filteredProducts;
     });
+    return filteredProducts;
   };
 
   handleChange = (event) => {
-    const updatedState = {
-      ...this.state,
-      [event.target.name.toLowerCase()]: event.target.value,
-    };
-
-    this.setState(updatedState);
-    const URLParams = new URLSearchParams(updatedState);
-
-    const filterParamsKeys = [];
-
-    for (const [key] of URLParams) {
-      filterParamsKeys.push(key);
-    }
-
-    this.handleFilter(filterParamsKeys);
-
-    window.history.replaceState({}, "", `${this.props.location.pathname}?${URLParams}`);
+    const { dispatch, filter_Parameters } = this.props;
+    dispatch(
+      addFilterParameters({
+        ...filter_Parameters,
+        [event.target.name.toLowerCase()]: event.target.value,
+      })
+    );
   };
 
+  componentDidMount() {
+    const { location, dispatch } = this.props;
+    const query = location.search;
+    const URLParams = new URLSearchParams(query);
+    if (query) {
+      let filterParamsKeys = {};
+      for (const [key, value] of URLParams) {
+        filterParamsKeys = { ...filterParamsKeys, [key]: value };
+      }
+      dispatch(addFilterParameters(filterParamsKeys));
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { filter_Parameters, location, dispatch } = this.props;
+
+    if (JSON.stringify(filter_Parameters) !== {}) {
+      console.log(filter_Parameters);
+      const URLParams = new URLSearchParams(filter_Parameters);
+      window.history.replaceState({}, "", `${location.pathname}?${URLParams}`);
+    }
+
+    if (JSON.stringify(prevProps.filter_Parameters) !== JSON.stringify(this.props.filter_Parameters)) {
+      const filterParamsKeys = Object.keys(filter_Parameters);
+      const filteredProducts = this.handleFilter(filterParamsKeys);
+      dispatch(addProducts(filteredProducts));
+    }
+
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      const { dispatch } = this.props;
+      dispatch(resetFilterParameters());
+      this.setState({});
+    }
+  }
+
   render() {
+    console.log(this.props);
     const { filters } = this.props;
     return (
       <aside className="category-filter">
@@ -127,4 +154,8 @@ export class Filters extends PureComponent {
   }
 }
 
-export default withRouter(Filters);
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps)(withRouter(Filters));
